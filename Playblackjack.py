@@ -72,9 +72,11 @@ def main():
         # reveal winner and give earnings
         print ('Your hand value: %s || Dealer\'s hand value: %s' % (value.hand_value(P1.hand), value.hand_value(dealer.hand)))
         if value.hand_value(P1.hand) > value.hand_value(dealer.hand):
+            P1.win() # add winnings to bank
             print ('You win!')
-            print ('you now have %s dollars total' %(P1.win()))
+            print ('you now have %s dollars total' %(P1.bank))
         else:
+            P1.lose() # subtract bet from P1 bank
             print ('Dealer wins')
             print ('you now have %s dollars total' %(P1.lose()))
         print ('end of the round')
