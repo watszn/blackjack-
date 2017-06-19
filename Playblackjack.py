@@ -1,14 +1,5 @@
 from blackjack import Deck, Player, Value
-'''
-out line:
-- get chips
-- begin to deal
-    - draw two cards (dealer and P1)
-- hit or pass
-- dealer can hit if hand is lower than 17 (soft 17)
-
-'''
-
+''' Simulate blackjack '''
 
 def main():
     # name variables
@@ -92,9 +83,5 @@ def main():
         dealer.new_hand()
         P1.new_hand()
         a = input('do you want to keep playing? (Y/N) ')
-
-
-
-
 
 main()
