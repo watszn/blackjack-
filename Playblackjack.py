@@ -41,8 +41,10 @@ def main():
         P1.hand.append(deck.deal_card())
         dealer.hand.append(deck.deal_card())
         # show your hand & dealer's last hand
-        print ('your current hand: %s' % (P1.hand))
-        print ('value of the hand is: %s' % (value.hand_value(P1.hand)))
+        print ('your current hand:')
+        print (spacer)
+        print (P1.show_hand())
+        print ('value of the hand is: %s' % (value.actual_value(P1.hand)))
         print (spacer)
         print ('dealer\'s hand: %s'% (dealer.hand[-1]))
         print (spacer)
@@ -52,11 +54,11 @@ def main():
         while (choose == 'H') or (choose == 'h'):
             P1.hand.append(deck.deal_card())
             print (spacer)
-            print ('you drew a %s. Hand value: %s' % (P1.hand[-1],  value.hand_value(P1.hand)))
+            print ('you drew a %s. Hand value: %s' % (P1.hand[-1], value.actual_value(P1.hand)))
             print (spacer)
             print ('Current Hand:')
             print (P1.show_hand())
-            if value.hand_value(P1.hand) > 21:
+            if value.actual_value(P1.hand) == 0:
                 print ('You busted')
                 print (P1.lose())
                 break
@@ -65,16 +67,29 @@ def main():
         print ('Dealer\'s turn')
         print (spacer)
 
-        print ('current value is: %s' % ( int(value.hand_value(dealer.hand))))
-        while int(value.hand_value(dealer.hand)) <= 17:
-            print ('dealer value: %s' % (int(value.hand_value(dealer.hand))))
+        print ('dealer\'s hand: ')
+        print (spacer)
+        print (dealer.show_hand())
+        print ('current value is: %s' % ( int(value.hand_value(dealer.hand) + value.ace_present(dealer.hand))))
+        while int(value.hand_value(dealer.hand) + value.ace_present(dealer.hand)) <= 17:
             dealer.hand.append(deck.deal_card())
+            print ('dealer drew a %s' % (dealer.hand[-1]))
+            print (spacer)
+            if value.hand_value(dealer.hand) != 0:
+                print ('dealer value: %s' % (int(value.hand_value(dealer.hand) + value.ace_present(dealer.hand))))
+            if value.hand_value(dealer.hand) == 0:
+                print ('dealer busted')
+                break
         # reveal winner and give earnings
-        print ('Your hand value: %s || Dealer\'s hand value: %s' % (value.hand_value(P1.hand), value.hand_value(dealer.hand)))
+        print ('Your hand value: %s || Dealer\'s hand value: %s' % (value.hand_value(P1.hand) + value.ace_present(P1.hand), value.hand_value(dealer.hand + value.ace_present(dealer.hand))))
         if value.hand_value(P1.hand) > value.hand_value(dealer.hand):
             P1.win() # add winnings to bank
+            if value.hand_value(dealer.hand) == 0:
+                print ('Dealer busted')
             print ('You win!')
             print ('you now have %s dollars total' %(P1.bank))
+        elif value.hand_value(P1.hand) == value.hand_value(dealer.hand):
+            print ('Tie.')
         else:
             P1.lose() # subtract bet from P1 bank
             print ('Dealer wins')

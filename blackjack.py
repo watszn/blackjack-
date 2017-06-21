@@ -7,7 +7,20 @@ classic_deck = [{suit: card} for suit in suits for card in face_cards] + [{suit:
 
 class Value:
     def __init__(self):
-        self.card_bank = {'A': 1, 'A': 11, 'J': 10, 'Q': 10, 'K': 10}
+        self.card_bank = {'A': 1,
+                          '2': 2,
+                          '3': 3,
+                          '4': 4,
+                          '5': 5,
+                          '6': 6,
+                          '7': 7,
+                          '8': 8,
+                          '9': 9,
+                          '10': 10,
+                          'A': 11,
+                          'J': 10,
+                          'Q': 10,
+                          'K': 10}
 
     def hand_value(self, hand = []):
         value = 0
@@ -15,9 +28,7 @@ class Value:
         count = 0
         for card in hand:
             count += 1
-            if value > 21: # first base case
-                return 'Bust'
-            elif card[0].isdigit() or card[0:2].isdigit(): # not face card
+            if card[0].isdigit() or card[0:2].isdigit(): # not face card
                 if not card[0:2].isdigit(): # 10
                     value += int(card[0])
                 else:
@@ -25,19 +36,30 @@ class Value:
             elif card[0].isalpha(): # face card
                 if card[0] != 'A':
                     value += 10
-                else:
-                    return (value + 1 + int(self.hand_value(hand[count:]))) or (value + 11 + int(self.hand_value(hand[count:])))
+                else: # Ace
+                    value += 1
         if int(value) < 22:
             return int(value)
         else:
-            return 0 # bust 
+            return 0 # bust
 
-    def bust(self, value):
-        if value > 21:
-            return True
+    def ace_present(self, hand):
+        ace = 0
+        for card in hand:
+            if card[0] == 'A':
+                ace += 1
+        if ace != 0:
+            return 10
         else:
-            return False
+            return 0
 
+    def actual_value(self, hand):
+        ''' gives actual card value using ace_present and hand_value '''
+        if self.hand_value(hand) == 0:
+            return 0 # bust
+        else:
+            return self.hand_value(hand) + self.ace_present(hand)
+            
 class Player: # abstract base class (abc)
     ''' describes player's bank, bet, wins, and losses '''
     def __init__(self, name = 'J doe', bank = 0):
@@ -50,37 +72,35 @@ class Player: # abstract base class (abc)
         for card in self.hand:
             print (card)
         return ' '
+
     def add_bank(self, add):
         self.bank += add
 
     def add_bet(self, bet):
         if int(bet) > int(self.bank):
             print ('this bet is higher than what you have, you have %s available' %(self.bank))
-            bet = input('enter new bet: ')
+            bet = int(input('enter new bet: '))
             return self.add_bet(bet)
         else:
             self.bet = bet
             return ('you bet %s dollars' % (self.bet))
 
     def win(self): # return bank w winnings
-        self.bank = self.bank + 2 * self.bet
+        self.bank = self.bank + self.bet
         return self.bank
 
     def lose(self):
         self.bank = self.bank - self.bet
         if self.bank <= 0:
-            print ('you lost %s dollars, you know have %s avalaible' %(self.bet, self.bank))
+            print ('you lost %d dollars, you know have %d avalaible' %(self.bet, self.bank))
             self.bank = 0
+            return self.bank
+        else:
+            return self.bank
 
     def new_hand(self):
         self.hand = []
         return self.hand
-
-    def soft_17(self, val):
-        if val <= 17:
-            return True
-        else:
-            return False
 
 
 class Deck:
