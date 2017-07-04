@@ -24,10 +24,7 @@ class Value:
 
     def hand_value(self, hand = []):
         value = 0
-        ace_present = 0
-        count = 0
         for card in hand:
-            count += 1
             if card[0].isdigit() or card[0:2].isdigit(): # not face card
                 if not card[0:2].isdigit(): # 10
                     value += int(card[0])
@@ -57,9 +54,11 @@ class Value:
         ''' gives actual card value using ace_present and hand_value '''
         if self.hand_value(hand) == 0:
             return 0 # bust
+        elif self.hand_value(hand) + self.ace_present(hand) > 21:
+            return self.hand_value(hand)
         else:
             return self.hand_value(hand) + self.ace_present(hand)
-            
+
 class Player: # abstract base class (abc)
     ''' describes player's bank, bet, wins, and losses '''
     def __init__(self, name = 'J doe', bank = 0):
@@ -92,7 +91,7 @@ class Player: # abstract base class (abc)
     def lose(self):
         self.bank = self.bank - self.bet
         if self.bank <= 0:
-            print ('you lost %d dollars, you know have %d avalaible' %(self.bet, self.bank))
+            print ('you lost %d dollars, you now have %d avalaible' %(self.bet, self.bank))
             self.bank = 0
             return self.bank
         else:
