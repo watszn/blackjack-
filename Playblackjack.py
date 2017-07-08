@@ -1,6 +1,7 @@
 #!/Library/Frameworks/Python.framework/Versions/3.6/bin/python3
 
 from blackjack import Deck, Player, Value
+from counter import count as c
 ''' Simulate blackjack '''
 
 def main():
@@ -34,6 +35,8 @@ def main():
                 keep_playing = False
                 break # cut to game
         # start game
+        if P1.bank == 0:
+            P1.bank = int(input('you ran out of money, enter more money: '))
         bet = int(input('enter your bet: '))
         print (P1.add_bet(bet))
         print ()
@@ -50,10 +53,14 @@ def main():
         print (spacer)
         print ('dealer\'s hand: %s'% (dealer.hand[-1]))
         print (spacer)
-
-        choose = input('Do you want to hit or stand? (H/S): ')
+        print ('card count: %s' % (c(deck.history)))
+        bj = False
+        if value.actual_value(P1.hand) != 21:
+            choose = input('Do you want to hit or stand? (H/S): ')
+        else:
+            bj = True
         # plauer's turn
-        while (choose == 'H') or (choose == 'h'):
+        while ((choose == 'H') and not bj) or ((choose == 'h') and not bj):
             P1.hand.append(deck.deal_card())
             print (spacer)
             print ('you drew a %s. Hand value: %s' % (P1.hand[-1], value.actual_value(P1.hand)))
@@ -63,16 +70,16 @@ def main():
             if value.actual_value(P1.hand) == 0:
                 print ('You busted')
                 break
+            print ('card count: %s' % (c(deck.history)))
             choose = input('Do you want to hit or stand? (H/S): ')
         # Dealer's turn
         print ('Dealer\'s turn')
         print (spacer)
 
         print ('dealer\'s hand: ')
-        print (spacer)
         print (dealer.show_hand())
         print ('dealer\'s current value is: %s' % (value.actual_value(dealer.hand) ))
-        while value.actual_value(dealer.hand) <= 17 and value.actual_value(P1.hand) != 0: # soft 17
+        while value.actual_value(dealer.hand) < 17 and value.actual_value(P1.hand) != 0: # soft 17
             dealer.hand.append(deck.deal_card())
             print ('dealer drew a %s' % (dealer.hand[-1]))
             print (spacer)
@@ -101,11 +108,9 @@ def main():
         # clear old hands
         dealer.new_hand()
         P1.new_hand()
-        print (deck.history)
         a = input('do you want to keep playing? (Y/N) ')
-        if P1.bank == 0:
-            print ('You have ran out of money')
-            bank
-            P1.bank = bank
+        bj = False
+        if len(deck.history) < 26:
+            deck._deck = deck.shuffle_deck()
 
 main()
