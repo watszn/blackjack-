@@ -1,6 +1,6 @@
 # Blackjack Simulator
 
-This repository allows a user to play blackjack.
+This repository allows a user to play blackjack with the ability to see the card count (based on Hi-Lo)
 
 ## HOW TO PLAY
 
@@ -14,5 +14,4 @@ This repository allows a user to play blackjack.
 - Only one deck can be used
 
 ## FUTURE IMPLEMENTATIONS
-- Card counter that helps user to make better choices
-- solve limitations stated above
+- Stats model of how well the Hi-Lo model works 
