@@ -1,4 +1,5 @@
 from blackjack import Deck, Player, Value
+from counter import count as c
 
 def main():
     # create a player
@@ -8,7 +9,9 @@ def main():
     dealer = Player('dealer')
     value = Value()
     # show beginning bank
-
+    # test count
+    print (len(deck.show_deck()))
+    print (c(deck.show_deck()))
     # win round
     P1.add_bet(20)
     P1_bank = P1.win()
@@ -34,6 +37,5 @@ def main():
         print ('hand value is now %s' % (P1_hand_value))
     if value.hand_value(P1.hand) == 0:
         print ('You busted')
-
 
 main()
